@@ -1,24 +1,27 @@
 import Sidebar from "../components/Sidebar";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'font-awesome/css/font-awesome.min.css';
 import Topbar from "../components/Topbar";
 import Car from "../components/Car";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import type CarInterface from "../interfaces/CarInterface";
 
 export default function Dashboard() {
-    const API_URL = import.meta.env.VITE_API_URL
-    const [cars, setCars] = useState([]);
-    useEffect(()=>{
-        getCars()
-    },[])
-    const getCars = ()=>{
-        axios.get(`${API_URL}/cars`).then((response:any)=>{
-            console.log(response.data)
-            setCars(response.data)
-        }).catch((error:any)=>{
-            console.log(error)
-        })
+    const API_URL = import.meta.env.VITE_API_URL;
+    const [cars, setCars] = useState<CarInterface[]>([]);
+    useEffect(() => {
+        getCars();
+    }, []);
+
+    const getCars = () => {
+        axios.get(`${API_URL}/cars`).then((response: any) => {
+            console.log(response.data);
+            const serverCars = response.data?.data ?? response.data ?? [];
+            setCars(Array.isArray(serverCars) ? serverCars : []);
+        }).catch((error: any) => {
+            console.error(error);
+            setCars([]);
+        });
     }
 
     return (
@@ -281,14 +284,6 @@ export default function Dashboard() {
                                     style={{ width: "40px", height: "40px" }}><i
                                         className="fa-solid fa-location-crosshairs text-white"></i></button>
                             </div>
-
-                            {/* Mock map elements (route and pins) */}
-                            <svg className="position-absolute w-100 h-100 top-0 start-0 pointer-events-none z-0">
-                                {/* Simulated Route Line */}
-                                <path d="M 280 480 L 320 450 L 370 460 L 450 380 L 520 390 L 580 250 L 680 280 L 720 220"
-                                    stroke="#1a1a1a" strokeWidth="4" fill="none" strokeLinejoin="round"
-                                    strokeLinecap="round" />
-                            </svg>
 
                             {/* Route start and end markers */}
                             <div className="position-absolute bg-success rounded-circle border border-white border-2 z-1 shadow"

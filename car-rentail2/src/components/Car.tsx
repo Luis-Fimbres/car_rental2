@@ -5,7 +5,9 @@ interface Props{
 }
 
 export default function Car({data}:Props){
-    var API_ASSETS = import.meta.env.VITE_API_ASSETS
+    const API_ASSETS = import.meta.env.VITE_API_ASSETS ?? "http://localhost:8000";
+    const imageUrl = data.img ? `${API_ASSETS}/cars/${data.img}` : "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=400";
+
     return(<>
                     <div className="car-card">
                                 <div className="d-flex justify-content-between align-items-center mb-3">
@@ -18,8 +20,8 @@ export default function Car({data}:Props){
                                     </div>
                                     <i className="fa-regular fa-heart text-muted fs-5 cursor-pointer hover-danger"></i>
                                 </div>
-                                <img src={`${API_ASSETS}/cars/${data.img}`}
-                                    className="car-img" alt="Audi A4" />
+                                <img src={imageUrl}
+                                    className="car-img" alt={data.model ?? "Car"} />
                                 <div className="d-flex justify-content-between align-items-end mt-3">
                                     <div>
                                         <h5 className="fw-bold mb-1">{data.model}</h5>
